@@ -3,45 +3,46 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="add">Insert User</h5>
+				<h5 class="modal-title" id="txtadd">Insert User</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id='form-edit'>
+			<form id="formsp">
 			<div class="modal-body">
 				
 					<div class="form-group">
 						<div class="inputid">
 							<label class="col-form-label">Id</label>
-							<input type="text" class="form-control" name ="id" id="id">
+							<input type="text" class="form-control" name ="id">
 						</div>
 						
 						
 						<label class="col-form-label">Tên sản phẩm</label>
-						<input type="text" class="form-control" name ="tsp" id="tsp">
+						<input type="text" class="form-control" name ="tsp">
 
 						
 						
 						<label class="col-form-label">Giá mới</label>
-						<input type="number" class="form-control" name ="gm" id="gm">
+						<input type="number" class="form-control" name ="gm">
 
 						
 						
 						<label class="col-form-label">Giá cũ</label>
-						<input type="number" class="form-control" name ="gc" id="gc">
+						<input type="number" class="form-control" name ="gc">
 
 
 						<label class="col-form-label">Số lượng</label>
-						<input type="number" class="form-control" name ="sl" id="sl">
+						<input type="number" class="form-control" name ="sl">
 
 						
-						<label class="col-form-label">Ngày nhập</labeln>
-						<input type="date" class="form-control" name="nn" id="nn">
+						<label class="col-form-label">Ngày nhập</label>
+						<!-- value="2009-09-19" hiện trên modal là: 19/09/2019--> 
+						<input type="date" class="form-control" name="nn">
 
 						
 						<label  class="col-form-label">Tình trạng</label>
-						<select class="form-control" name="tinhtrang" id="tinhtrang">
+						<select class="form-control" name="tinhtrang">
 							<option value="0" selected>Default</option>
 							<option value="1">New</option>
 							<option value="2">Hot</option>
@@ -49,16 +50,16 @@
 
 						<label for="recipient-name" class="col-form-label">Trạng thái</label>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="trangthai" value="0" id="tt">
+							<input class="form-check-input" type="radio" name="trangthai" value="0">
 							<label class="form-check-label">Ẩn</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="trangthai" value="1" id="tt">
+							<input class="form-check-input" type="radio" name="trangthai" value="1">
 							<label class="form-check-label">Hiện</label>
 						</div>
 						<br>
 						<label for="message-text" class="col-form-label">Loại sản phẩm</label>
-						<select class="custom-select mr-sm-2 selecloaisp">
+						<select class="custom-select mr-sm-2 selecloaisp" name="slloai">
 							<!-- <option selected>Loại Sản Phẩm</option>
 							<option value="1">Bánh</option>
 							<option value="2">Kẹo</option>

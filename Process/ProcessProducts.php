@@ -7,23 +7,9 @@ if (isset($_GET['type'])) {
 		break;
 
 
-		// case 'them':
-		// // $tsp= $_GET["tsp"];
-		// $gm=$_GET['gm'];
-		// $gc=$_GET['gc'];
-		// $sl=$_GET['sl'];
-		// // $day=NgayNhap($_GET['nn']);
-		// // $tt=$_GET['tinhtrang'];
-		// // $trangthai=$_GET['tt'];
-		// // $loai=$_GET['idl'];
-		// echo $loai;
-		// require "../Page/ketnoi.php";
-		// $sql="INSERT INTO sanpham (TenSP,GiaMoi,GiaCu,SoLuong,NgayNhap,TinhTrang,TrangThai,IdLoaiSP) VALUES('".$tsp."',$gm,$gc,$sl,$day,$tt,$trangthai,$loai)";
-		// $stmt=$conn->prepare($sql);
-		// $stmt->execute();
-		// $count =$stmt->rowCount();
-		// echo $count;
-		// break;
+		case 'them':
+		ThemSP();
+		break;
 
 
 		case 'sua':
@@ -131,7 +117,7 @@ function Load(){
 		echo "<td>".$row["SoLuong"]."</td>";
 		echo "<td>".XuLyNgay($row["NgayNhap"])."</td>";
 		echo "<td>".TenTinhTrang($row["TinhTrang"])."</td>";
-		echo "<td>".TrangThai($row["TrangThai"])."</td>";
+		echo "<td>".GetIdTrangThai($row["TrangThai"])."</td>";
 		echo "<td>".TenLoaiSP($row["IdLoaiSP"])."</td>";
 		echo '<td><button type="button" data-id='.$row["Id"].' class="btn btn-warning" id="btnsua">Sửa</button>';
 		echo '<button type="button" data-id='.$row["Id"].' class="btn btn-danger btn-delete" id="btndelete" value="'.$row["Id"].'">Xóa</button></td>';
@@ -197,65 +183,79 @@ function Getid($id){
 		echo json_encode(array('data'=>$rs));
 	}
 }
-// function Search(){
-// 	$sr=$_GET['sr'];
-// 	$tt=GetIdTrangThai($sr);
-// 	require "../Page/ketnoi.php";
-// 	$sql="SELECT * FROM sanpham WHERE TenSP LIKE '%$sr%' OR 
-// 	Id LIKE '%$sr%' OR 
-// 	GiaMoi LIKE '%$sr%' OR 
-// 	GiaCu LIKE '%$sr%' OR 
-// 	SoLuong LIKE '%$sr%' OR 
-// 	NgayNhap LIKE '%$sr%' OR 
-// 	TinhTrang LIKE '%".GetIdTinhTrang($sr)."%' OR 
-// 	TrangThai  '%$tt%'";
-// 	// echo $sql;
-// 	$stmt=$conn->prepare($sql);
-// 	$stmt->execute();
-// 	$table=$stmt->fetchAll();
-// 	$stt=1;
-// 	foreach ($table as $row) {
-// 		echo "<tr>";
-// 		// echo "<td>".$row["Id"]."</td>";
-// 		echo "<td>".($stt++)."</td>";
-// 		echo "<td>".$row["TenSP"]."</td>";
-// 		echo "<td>".number_format($row["GiaMoi"])."</td>";
-// 		echo "<td>".number_format($row["GiaCu"])."</td>";
-// 		echo "<td>".$row["SoLuong"]."</td>";
-// 		echo "<td>".XuLyNgay($row["NgayNhap"])."</td>";
-// 		echo "<td>".TenTinhTrang($row["TinhTrang"])."</td>";
-// 		echo "<td>".TrangThai($row["TrangThai"])."</td>";
-// 		echo "<td>".TenLoaiSP($row["IdLoaiSP"])."</td>";
-// 		echo '<td><button type="button" data-id='.$row["Id"].' class="btn btn-warning" id="btnsua">Sửa</button>';
-// 		echo '<button type="button" data-id='.$row["Id"].' class="btn btn-danger btn-delete" id="btndelete" value="'.$row["Id"].'">Xóa</button></td>';
-// 		echo "</tr>";
+function Search(){
+	$sr=$_GET['sr'];
+	require "../Page/ketnoi.php";
+	$sql="SELECT * FROM sanpham WHERE TenSP LIKE '%$sr%' OR 
+	Id LIKE '%$sr%' OR 
+	GiaMoi LIKE '%$sr%' OR 
+	GiaCu LIKE '%$sr%' OR 
+	SoLuong LIKE '%$sr%' OR 
+	NgayNhap LIKE '%$sr%' OR 
+	TinhTrang LIKE '%$sr%' OR 
+	TrangThai LIKE '%$sr%'";
+	// echo $sql;
+	$stmt=$conn->prepare($sql);
+	$stmt->execute();
+	$table=$stmt->fetchAll();
+	$stt=1;
+	foreach ($table as $row) {
+		echo "<tr>";
+		// echo "<td>".$row["Id"]."</td>";
+		echo "<td>".($stt++)."</td>";
+		echo "<td>".$row["TenSP"]."</td>";
+		echo "<td>".number_format($row["GiaMoi"])."</td>";
+		echo "<td>".number_format($row["GiaCu"])."</td>";
+		echo "<td>".$row["SoLuong"]."</td>";
+		echo "<td>".XuLyNgay($row["NgayNhap"])."</td>";
+		echo "<td>".TenTinhTrang($row["TinhTrang"])."</td>";
+		echo "<td>".TrangThai($row["TrangThai"])."</td>";
+		echo "<td>".TenLoaiSP($row["IdLoaiSP"])."</td>";
+		echo '<td><button type="button" data-id='.$row["Id"].' class="btn btn-warning" id="btnsua">Sửa</button>';
+		echo '<button type="button" data-id='.$row["Id"].' class="btn btn-danger btn-delete" id="btndelete" value="'.$row["Id"].'">Xóa</button></td>';
+		echo "</tr>";
 		
-// 	}
+	}
 
-// }
-// function GetIdTinhTrang($sr){
-// 	if($sr=="default"){
-// 		return 0;
-// 	}
-// 	else if($sr=="hot")
-// 	{
-// 		return 2;
-// 	}
-// 	else
-// 	{
-// 		return 1;
-// 	}
-// }
-// function GetIdTrangThai($sr){
-// 	if($sr=="Hiện"){
-// 		return 1;
-// 	}
-// 	return 0;
+}
+function GetIdTinhTrang($sr){
+	if($sr=="default"){
+		return 0;
+	}
+	else if($sr=="hot")
+	{
+		return 2;
+	}
+	else
+	{
+		return 1;
+	}
+}
+function GetIdTrangThai($sr){
+	if($sr=="0"){
+		return Ẩn;
+	}
+	return Hiện;
 	
-// }
-
-
-
-
-
-?>
+}
+function ThemSP(){
+require "../Page/ketnoi.php";
+// echo $_POST['tsp']."=".$_POST['gc']."=".$_POST['gm']."=".$_POST['sl']."=".$_POST['nn']."=".$_POST['tinhtrang']."=".$_POST['trangthai']."=".$_POST['slloai'];
+$stmt=$conn->prepare("INSERT INTO sanpham(TenSP,GiaCu,GiaMoi,SoLuong,NgayNhap,TinhTrang,TrangThai,IdLoaiSP) VALUES (:tsp,:gc,:gm,:sl,:nn,:tt,:trangthai,:tenloai)");
+$stmt->execute([
+	'tsp'=>$_POST['tsp'],
+	'gc'=>$_POST['gc'],
+	'gm'=>$_POST['gm'],
+	'sl'=>$_POST['sl'],
+	'nn'=>DateI($_POST['nn']),
+	'tt'=>$_POST['tinhtrang'],
+	'trangthai'=>(bool)$_POST['trangthai'],
+	'tenloai'=>$_POST['slloai'],
+]);
+$count=$stmt->rowCount();
+echo $count;
+}
+// 2009-09-19 nhập vào-. xuất ra là 09/19/2019
+function DateI($dateS){
+	return (int)str_replace('-','',$dateS);
+}
