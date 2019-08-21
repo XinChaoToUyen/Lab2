@@ -13,26 +13,8 @@ if (isset($_GET['type'])) {
 
 
 		case 'sua':
-		$tsp= $_GET["tsp"];
-		$gm=$_GET['gm'];
-		$gc=$_GET['gc'];
-		$sl=$_GET['sl'];
-		$id=$_GET['id'];
-		$day=NgayNhap($_GET['nn']);
-		$tt=$_GET['tinhtrang'];
-		$trangthai=(bool)$_GET['tt'];
-		$loai=$_GET['idl'];
-		require "../Page/ketnoi.php";
-		$sql="UPDATE sanpham
-		SET TenSP = '$tsp', GiaMoi=$gm, GiaCu=$gm,SoLuong=$sl,NgayNhap='$day',TinhTrang='$tt',TrangThai='$trangthai',IdLoaiSP=$loai
-		WHERE Id = ".$id;
-		$stmt=$conn->prepare($sql);
-		$stmt->execute();
-		echo $count =$stmt->rowCount();
-		break;
-		case 'getid':
-		$id=$_GET['id'];
-		Getid($id);
+		SuaSP();
+
 		break;
 		case 'xoa':
 		delete($_GET['id']);
@@ -70,7 +52,8 @@ if (isset($_GET['type'])) {
 		}
 		echo '<li class="page-item '.($page==$soTrang?"disabled":"").'" style="cursor:pointer;color:blue"><a class="page-link next">Next</a></li>';
 		break;
-		case 'sapxep':
+		case 'getid':
+		Getid();
 		break;
 		case 'search':
 		Search();
@@ -173,14 +156,15 @@ function GetTenLoai(){
 		echo '<option value="'.$row['Id'].'">'.$row['TenLoai'].'</option>';
 	}
 }
-function Getid($id){
+function Getid(){
+	$id=$_GET['id'];
 	require "../Page/ketnoi.php";
-	$stmt=$conn->prepare("SELECT * FROM sanpham WHERE Id=:id");
-	$stmt->execute(["id"=>$id]);
+	$stmt=$conn->prepare("SELECT * FROM sanpham WHERE Id=$id");
+	$stmt->execute();
 	$rs=$stmt->fetch(PDO::FETCH_ASSOC);
 	$count=$stmt->rowCount();
 	if($count>0){
-		echo json_encode(array('data'=>$rs));
+		echo json_encode($rs);
 	}
 }
 function Search(){
@@ -259,3 +243,23 @@ echo $count;
 function DateI($dateS){
 	return (int)str_replace('-','',$dateS);
 }
+function SuaSP(){
+	require "../Page/ketnoi.php";
+	
+	$stmt=$conn->prepare('UPDATE sanpham SET TenSP=:tsp, GiaMoi=:gm, GiaCu=:gc, SoLuong=:sl, NgayNhap=:nn, TinhTrang=:tt, TrangThai=:trangthai, IdLoaiSP=:tenloai WHERE Id=:id');
+	$stmt->execute(['tsp'=>$_POST['tsp'],
+	'gc'=>$_POST['gc'],
+	'gm'=>$_POST['gm'],
+	'sl'=>$_POST['sl'],
+	'nn'=>DateI($_POST['nn']),
+	'tt'=>$_POST['tinhtrang'],
+	'trangthai'=>(bool)$_POST['trangthai'],
+	'tenloai'=>$_POST['slloai'],
+	'id'=>$_POST['id']
+	]);
+	$count=$stmt->rowCount();
+	echo $count;
+}
+
+
+?>

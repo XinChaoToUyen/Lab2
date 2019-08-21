@@ -130,7 +130,7 @@ require "../script/script.php";
 				}
 			});
 		});
-		//Thêm
+
 		// Hiển thị modal thêm lên
 		$('#btnadd').click(function() {
 			$('#modalAU').modal('show');
@@ -140,7 +140,7 @@ require "../script/script.php";
 		});
 		//Thêm ở modal
 		$('#btnInsert').click(function() {
-			var formData=new FormData($('#formsp')[0]);
+			var formData = new FormData($('#formsp')[0]);
 			$.ajax({
 				url: '../Process/ProcessProducts.php?type=them',
 				type: 'post',
@@ -150,59 +150,13 @@ require "../script/script.php";
 				success: function(data) {
 					$('#modalAU').modal('hide');
 					Load();
-					alert(data);
+					// alert(data);
 				}
 			});
 		});
-
-		// alert(doingay());
 		// Thoat trong modal
 		$('#btnClose').click(function() {
 			$('#modalAU').modal('hide');
-		});
-		// Sua trong table - Ủy nhiệm hàm
-		$(document).on('click', '#btnsua', function() {
-			var id = $(this).data('id'); // data-id=10
-			$('#add').text("Sửa Sản Phẩm");
-			$('#btnInsert').hide();
-			$('#btnUpdate').show();
-			$('.inputid').show();
-			$('#id').attr("readonly", "readonly");
-			$('#modalAU').modal('show');
-			// alert();
-			//Hiển thị thông tin dữ liệu lên modal
-			$.ajax({
-				url: '../Process/ProcessProducts.php',
-				type: 'get',
-				data: {
-					type: 'getid',
-					id: id
-				},
-				dataType: 'JSON',
-				success: function(data) {
-					console.log(data);
-					// data=JSON.parse(data);
-					$('#id').val(data.Id);
-					$('#tsp').val(data.TenSP);
-					$('#gm').val(data.GiaMoi);
-					$('#gc').val(data.GiaCu);
-					$('#sl').val(data.SoLuong);
-					// alert(data['SoLuong']);
-					var ngay = GanNgay(data['NgayNhap']); // YYYY-MM-DD
-					$('#nn').val(ngay);
-					$('#tinhtrang').val(data['TinhTrang']);
-					var rd = data['TrangThai'];
-					if (rd == "1") {
-						$("input[name='trangthai'][value='1']").prop('checked', true);
-						$("input[name='trangthai'][value='(data['TrangThai'])']").removeAttr("checked");
-
-					} else {
-						$("input[name='trangthai'][value='0']").prop('checked', true);
-						$("input[name='trangthai'][value='(data['TrangThai'])']").removeAttr("checked");
-					}
-					$('.selecloaisp').val(data['IdLoaiSP']);
-				}
-			});
 		});
 		$(document).on('click', '#btndelete', function() {
 			var id = $(this).data('id'); // data-id=10
@@ -212,8 +166,9 @@ require "../script/script.php";
 				url: '../Process/ProcessProducts.php?type=xoa&id=' + id,
 				success: function(data) {
 					// alert("Xóa xong rồi uyên!!!");
-					$('#btnco').click(function() {
-						load();
+					$('#btnco').click(function(data) {
+						$('#modalD').modal('hide');
+						Load();
 					})
 				}
 			});
@@ -228,59 +183,6 @@ require "../script/script.php";
 				$('.selecloaisp').html(data);
 			}
 		});
-		// sửa trong modal upload lên bảng
-
-		$("#btn-edit").on('click', function() {
-			alert();
-			// e.preventDefault();
-			var str = $("#form-edit").serialize();
-			console.log(str);
-			$.ajax({
-				url: '../Process/ProcessProducts.php',
-				type: 'get',
-				data: str,
-				dataType: 'JSON',
-				success: function(data) {
-					$('#modalAU').modal('hide');
-					Load();
-				}
-			});
-		});
-
-		$('#btnUpdate').click(function() {
-			var id = $('#id').val();
-			var tsp = $('#tsp').val();
-			var gm = $('#gm').val();
-			var gc = $('#gc').val();
-			var sl = $('#sl').val();
-			var ngay = $('#nn').val(); //2019-08-09 -> "20190809" -> 20190809
-			var tinhtrang = $('#tinhtrang').val();
-			var tt = $("input[name='trangthai']:checked").val();
-			var idl = $('.selecloaisp').val();
-
-			// alert(tsp+gm+gc+sl+ngay+tinhtrang+tt+idl);
-			$.ajax({
-				url: '../Process/ProcessProducts.php',
-				type: 'get',
-				data: {
-					type: 'sua',
-					id: id,
-					tsp: tsp,
-					gm: gm,
-					gc: gc,
-					sl: sl,
-					nn: ngay,
-					tinhtrang: tinhtrang,
-					tt: tt,
-					idl: idl
-				},
-				// dataType:'JSON',
-				success: function(data) {
-					$('#modalAU').modal('hide');
-					Load();
-				}
-			});
-		});
 		// phantrang
 		$.ajax({
 			url: '../Process/ProcessProducts.php',
@@ -291,15 +193,84 @@ require "../script/script.php";
 			},
 			success: function(data) {}
 		});
-		// Chuyển ngày kiểu int sang chuỗi YYYY-MM-DD
-		function GanNgay($ngayI) {
-			$ngayS = $ngayI + "";
-			$nam = $ngayS.substr(0, 4);
-			$thang = $ngayS.substr(4, 2);
-			$ngay = $ngayS.substr(6, 2);
-			return $nam + "-" + $thang + "-" + $ngay;
-		}
-	})
+		// ủy nhiệm hàm cho btnsua
+		$(document).on("click", "#btnsua", function() {
+			var id = $(this).data('id');
+			// alert(id);
+			$('#modalAU').modal('show');
+			$('#txtadd').text("Update product");
+			$('#btnInsert').hide();
+			$.ajax({
+				url: '../Process/ProcessProducts.php',
+				type: 'get',
+				data: {
+					type: 'getid',
+					id: id
+				},
+				success: function(data) {
+					var b = JSON.parse(data);
+					// console.log(DataStr(b['NgayNhap']));
+					$('#id').val(b['Id']);
+					$('#tsp').val(b['TenSP']);
+					$('#gm').val(b['GiaMoi']);
+					$('#gc').val(b['GiaCu']);
+					$('#sl').val(b['SoLuong']);
+					$('#nn').val(DataStr(b['NgayNhap']));
+					$('#tt').val(b['TinhTrang']);
+					//    console.log(b['TrangThai']);
+					if(b["TrangThai"]=="1"){
+						$('input[name="trangthai"][value="1"]').attr('checked','true');
+						$('input[name="trangthai"][value="0"]').removeAttr('checked','true');
+					}else{
+						$('input[name="trangthai"][value="0"]').attr('checked','true');
+						$('input[name="trangthai"][value="1"]').removeAttr('checked','true');
 
-	// });
+
+					}
+					
+					// console.log(b['IdLoaiSP']);
+					$('.selecloaisp').val(b['IdLoaiSP']);
+
+				}
+
+			});
+			$('#btnUpdate').click(function(){
+				var formdata=new FormData($('#formsp')[0]);
+				formdata.append('id',$('#id').val());
+				$.ajax({
+					url:'../Process/ProcessProducts.php?type=sua',
+					type:'post',
+					data:formdata,
+					contentType: false,
+					processData: false,
+					success:function(data){
+						$('#modalAU').modal('hide');
+						Load();
+
+					}
+
+				});
+
+			});
+		});
+
+		function DataStr($dateI) {
+			var dateStr = $dateI + "";
+			var nam = dateStr.substr(0, 4);
+			var thang = dateStr.substr(4, 2);
+			var ngay = dateStr.substr(6, 2);
+			return nam + '-' + thang + '-' + ngay;
+		}
+
+		function TenTinhTrang($idTen) {
+			if ($idTen == 0) {
+				return "Default";
+			} else if ($idTen == 1) {
+				return "New";
+			} else {
+				return "Hot";
+			}
+		}
+
+	})
 </script>
